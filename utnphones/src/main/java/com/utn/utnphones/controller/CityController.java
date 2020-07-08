@@ -1,0 +1,73 @@
+package com.utn.utnphones.controller;
+
+import com.utn.utnphones.dto.UpdateCityDto;
+import com.utn.utnphones.exceptions.CityNotFoundException;
+import com.utn.utnphones.exceptions.ProvinceNotFoundException;
+import com.utn.utnphones.model.City;
+import com.utn.utnphones.model.Province;
+import com.utn.utnphones.service.CityService;
+import com.utn.utnphones.service.ProvinceService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import javax.validation.Valid;
+import java.net.URI;
+import java.util.List;
+
+import static com.utn.utnphones.utils.RestUtils.getCityLocation;
+
+@RestController
+@RequestMapping("/api/city")
+public class CityController {
+
+    private final CityService cityService;
+    private final ProvinceService provinceService;
+
+    @Autowired
+    public CityController(CityService cityService, ProvinceService provinceService) {
+        this.cityService = cityService;
+        this.provinceService = provinceService;
+    }
+
+    @GetMapping("/")
+    public ResponseEntity<List<City>> getAll() {
+        List<City> cityList = cityService.getAll();
+
+        if (cityList.size() > 0) {
+            return ResponseEntity.ok(cityList);
+        } else {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+    }
+
+    @GetMapping("/{cityId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<City> getCityById(@PathVariable Integer cityId) throws CityNotFoundException {
+        return ResponseEntity.ok(cityService.getCityById(cityId));
+    }
+
+    @PostMapping("/")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity addCity(@RequestBody @Valid City c) throws ProvinceNotFoundException {
+        if (!provinceService.existsById(c.getProvince().getIdProvince()))
+            throw new ProvinceNotFoundException();
+        City newCity = cityService.addCity(c);
+        return ResponseEntity.created(getCityLocation(newCity)).build();
+    }
+
+    @PutMapping("/{cityId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity updateCity(@PathVariable Integer cityId, @RequestBody UpdateCityDto updateCityDtoCity) throws ProvinceNotFoundException, CityNotFoundException {
+        if (updateCityDtoCity.getIdProvince() != null) {
+            Province province = provinceService.getProvinceById(updateCityDtoCity.getIdProvince());
+            cityService.updateCity(cityId, updateCityDtoCity, province);
+        } else
+            cityService.updateCity(cityId, updateCityDtoCity, null);
+
+        return ResponseEntity.ok().build();
+    }
+}
