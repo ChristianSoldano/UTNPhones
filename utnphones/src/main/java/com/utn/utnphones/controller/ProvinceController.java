@@ -28,7 +28,6 @@ public class ProvinceController {
     }
 
     @GetMapping("/")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<List<Province>> getAll() {
         List<Province> provinceList = provinceService.getAll();
 

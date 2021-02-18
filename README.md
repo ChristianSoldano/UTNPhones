@@ -1,3 +1,18 @@
+## CONFIGURACIÓN
+  Antes de correr el sistema deberá ejecutar el script de la base de datos 'database_scripts.sql'
+  Una vez creada la base de datos cree un nuevo archivo llamado 'application.yml' en "utnphones\src\main\resources\"
+  En el copie el siguiente codigo:
+
+  **Importante:** Deberá respetar el identado, de otra manera se romperá el archivo.
+  ```sh
+  spring:
+    datasource:
+      url: jdbc:mysql://localhost:3306/utnphones
+      username: root
+      password: password
+  ```
+
+
 > Repositorio original: https://github.com/TobiasRV/UTNPhones
 
 # TP INTEGRADOR BASE DE DATOS/ PROGRAMACIÓN AVANZADA I

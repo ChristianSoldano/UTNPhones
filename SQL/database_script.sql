@@ -257,40 +257,40 @@ delimiter ;
 
 -- ORIGINAL SP INSERT CALLS 
 
-delimiter //
-create procedure sp_insert_call(pOriginNumber varchar(16), pDestinationNumber varchar(16), pDate datetime, pDuration int)
-begin
-  declare vOriginPrefix varchar(5);
-  declare vDestinationPrefix varchar(5);
-  declare vOriginNumber varchar(10);
-  declare vDestinationNumber varchar(10);
-  declare vOriginCityId int;
-  declare vDestinationCityId int;
-  declare vIdRate int;
-  declare vPrice double;
-  declare vCost double;
+-- delimiter //
+-- create procedure sp_insert_call(pOriginNumber varchar(16), pDestinationNumber varchar(16), pDate datetime, pDuration int)
+-- begin
+--   declare vOriginPrefix varchar(5);
+--   declare vDestinationPrefix varchar(5);
+--   declare vOriginNumber varchar(10);
+--   declare vDestinationNumber varchar(10);
+--   declare vOriginCityId int;
+--   declare vDestinationCityId int;
+--   declare vIdRate int;
+--   declare vPrice double;
+--   declare vCost double;
 
-  set vOriginPrefix = substring_index(pOriginNumber,"-",1);
-  set vDestinationPrefix = substring_index(pDestinationNumber,"-",1);
-
-
-  set vOriginNumber = substring_index(pOriginNumber,"-",-1);
-  set vDestinationNumber = substring_index(pDestinationNumber,"-",-1);
+--   set vOriginPrefix = substring_index(pOriginNumber,"-",1);
+--   set vDestinationPrefix = substring_index(pDestinationNumber,"-",1);
 
 
-  set vOriginCityId = getCityIdByPrefix(vOriginPrefix);
-  set vDestinationCityId = getCityIdByPrefix(vDestinationPrefix);
+--   set vOriginNumber = substring_index(pOriginNumber,"-",-1);
+--   set vDestinationNumber = substring_index(pDestinationNumber,"-",-1);
 
 
-  set vIdRate = getIdRate(vOriginCityId,vDestinationCityId);
-  set vPrice = pDuration * (getCallPrice(vIdRate)/60);
-  set vCost = pDuration * (getCallCost(vIdRate)/60);
+--   set vOriginCityId = getCityIdByPrefix(vOriginPrefix);
+--   set vDestinationCityId = getCityIdByPrefix(vDestinationPrefix);
 
-  insert into calls(id_origin_line, id_destination_line, call_date, id_rate, call_duration, call_cost, call_price)
-  values (getLineId(vOriginCityId,vOriginNumber), getLineId(vDestinationCityId,vDestinationNumber),pDate,vIdRate, pDuration,vCost, vPrice);
 
-end //
-delimiter ;
+--   set vIdRate = getIdRate(vOriginCityId,vDestinationCityId);
+--   set vPrice = pDuration * (getCallPrice(vIdRate)/60);
+--   set vCost = pDuration * (getCallCost(vIdRate)/60);
+
+--   insert into calls(id_origin_line, id_destination_line, call_date, id_rate, call_duration, call_cost, call_price)
+--   values (getLineId(vOriginCityId,vOriginNumber), getLineId(vDestinationCityId,vDestinationNumber),pDate,vIdRate, pDuration,vCost, vPrice);
+
+-- end //
+-- delimiter ;
 
 
 -- SP INSERTAR CALLS SUPONIENDO QUE TODOS LOS NUMEROS SIN EL PREFIJO TIENEN UNA LONGITUD DE 7 
@@ -335,37 +335,37 @@ delimiter ;
 -- EJ:
 -- SELECT c.prefix FROM cities c WHERE "3435363325" LIKE CONCAT(c.prefix, '%') ORDER BY LENGTH(c.prefix) DESC LIMIT 1;
 
-delimiter //
-create procedure sp_insert_call(pOriginNumber varchar(16), pDestinationNumber varchar(16), pDate datetime, pDuration int)
-begin
-  declare vOriginPrefix varchar(5);
-  declare vDestinationPrefix varchar(5);
-  declare vOriginNumber varchar(10);
-  declare vDestinationNumber varchar(10);
-  declare vOriginCityId int;
-  declare vDestinationCityId int;
-  declare vIdRate int;
-  declare vPrice double;
-  declare vCost double;
+-- delimiter //
+-- create procedure sp_insert_call(pOriginNumber varchar(16), pDestinationNumber varchar(16), pDate datetime, pDuration int)
+-- begin
+--   declare vOriginPrefix varchar(5);
+--   declare vDestinationPrefix varchar(5);
+--   declare vOriginNumber varchar(10);
+--   declare vDestinationNumber varchar(10);
+--   declare vOriginCityId int;
+--   declare vDestinationCityId int;
+--   declare vIdRate int;
+--   declare vPrice double;
+--   declare vCost double;
 
-  SELECT c.prefix INTO vOriginPrefix FROM cities c WHERE pOriginNumber LIKE CONCAT(c.prefix, '%') ORDER BY LENGTH(c.prefix) DESC LIMIT 1;
-  SELECT c.prefix INTO vDestinationPrefix FROM cities c WHERE pDestinationNumber LIKE CONCAT(c.prefix, '%') ORDER BY LENGTH(c.prefix) DESC LIMIT 1;
+--   SELECT c.prefix INTO vOriginPrefix FROM cities c WHERE pOriginNumber LIKE CONCAT(c.prefix, '%') ORDER BY LENGTH(c.prefix) DESC LIMIT 1;
+--   SELECT c.prefix INTO vDestinationPrefix FROM cities c WHERE pDestinationNumber LIKE CONCAT(c.prefix, '%') ORDER BY LENGTH(c.prefix) DESC LIMIT 1;
 
-  set vOriginNumber = substring(pOriginNumber,char_length(vOriginPrefix)+1);
-  set vDestinationNumber = substring(pDestinationNumber,char_length(vDestinationPrefix)+1);
+--   set vOriginNumber = substring(pOriginNumber,char_length(vOriginPrefix)+1);
+--   set vDestinationNumber = substring(pDestinationNumber,char_length(vDestinationPrefix)+1);
 
-  set vOriginCityId = getCityIdByPrefix(vOriginPrefix);
-  set vDestinationCityId = getCityIdByPrefix(vDestinationPrefix);
+--   set vOriginCityId = getCityIdByPrefix(vOriginPrefix);
+--   set vDestinationCityId = getCityIdByPrefix(vDestinationPrefix);
 
-  set vIdRate = getIdRate(vOriginCityId,vDestinationCityId);
-  set vPrice = pDuration * (getCallPrice(vIdRate)/60);
-  set vCost = pDuration * (getCallCost(vIdRate)/60);
+--   set vIdRate = getIdRate(vOriginCityId,vDestinationCityId);
+--   set vPrice = pDuration * (getCallPrice(vIdRate)/60);
+--   set vCost = pDuration * (getCallCost(vIdRate)/60);
 
-  insert into calls(id_origin_line, id_destination_line, call_date, id_rate, call_duration, call_cost, call_price)
-  values (getLineId(vOriginCityId,vOriginNumber), getLineId(vDestinationCityId,vDestinationNumber),pDate,vIdRate, pDuration,vCost, vPrice);
+--   insert into calls(id_origin_line, id_destination_line, call_date, id_rate, call_duration, call_cost, call_price)
+--   values (getLineId(vOriginCityId,vOriginNumber), getLineId(vDestinationCityId,vDestinationNumber),pDate,vIdRate, pDuration,vCost, vPrice);
 
-end //
-delimiter ;
+-- end //
+-- delimiter ;
 
 
 
