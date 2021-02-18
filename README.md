@@ -1,9 +1,9 @@
 ## CONFIGURACIÓN
-  Antes de correr el sistema deberá ejecutar el script de la base de datos 'database_scripts.sql'
-  Una vez creada la base de datos cree un nuevo archivo llamado 'application.yml' en "utnphones\src\main\resources\"
-  En el copie el siguiente codigo:
-
-  **Importante:** Deberá respetar el identado, de otra manera se romperá el archivo.
+  1. Antes de correr el sistema deberá ejecutar el script de la base de datos ___database_scripts.sql___
+  2. Una vez creada la base de datos cree un nuevo archivo llamado ___application.yml___ en "utnphones\src\main\resources\"
+        2.1 En él, copie el siguiente codigo y modifique los datos para la conexión a la base de datos: 
+    
+**Importante:** Deberá respetar el identado, de otra manera se romperá el archivo.
   ```sh
   spring:
     datasource:
